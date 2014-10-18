@@ -356,6 +356,7 @@ class Taxonomy_Single_Term {
 			'selected'      => ' selected="selected"',
 			'disabled'      => '',
 			'label'         => esc_html( apply_filters( 'the_category', $term->name ) ),
+			'depth'		=> 0
 		);
 
 		$output = '';
