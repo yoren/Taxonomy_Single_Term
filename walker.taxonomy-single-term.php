@@ -14,9 +14,10 @@ class Taxonomy_Single_Term_Walker extends Walker {
 	public $tree_type = 'category';
 	public $db_fields = array( 'parent' => 'parent', 'id' => 'term_id' ); //TODO: decouple this
 
-	public function __construct( $hierarchical, $input_element ) {
+	public function __construct( $hierarchical, $input_element, $indented ) {
 		$this->hierarchical = $hierarchical;
 		$this->input_element = $input_element;
+		$this->indented = $indented;
 	}
 
 	/**
@@ -87,7 +88,8 @@ class Taxonomy_Single_Term_Walker extends Walker {
 			'checked'       => checked( $in_selected, true, false ),
 			'selected'      => selected( $in_selected, true, false ),
 			'disabled'      => disabled( empty( $args['disabled'] ), false, false ),
-			'label'         => esc_html( apply_filters('the_category', $term->name ) )
+			'label'         => esc_html( apply_filters('the_category', $term->name ) ),
+			'depth'		=> $depth
 		);
 
 		$output .= 'radio' == $this->input_element
@@ -127,13 +129,16 @@ class Taxonomy_Single_Term_Walker extends Walker {
 	 * @return string       Opening option element and option text
 	 */
 	public function start_el_select( $args ) {
+		$label = $this->indented ? str_repeat( "&#8212;", $args['depth'] ) : '';
+		$label .= $args['label'];
+
 		return "\n".sprintf(
 			'<option %s %s id="%s" value="%s" class="class-single-term">%s',
 			$args['selected'],
 			$args['disabled'],
 			$args['id'],
 			$args['value'],
-			$args['label']
+			$label
 		);
 	}
 
